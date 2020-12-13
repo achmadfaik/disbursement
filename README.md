@@ -1,62 +1,216 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+## About Micro Service
+#### run development
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+    composer install
+    create .env
+    php artisan migrate --seed
+    php artisan passport:install
+    php artisan passport:client --personal
+    php artisan serve
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Run & Test
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+##### Authentication
 
-## Learning Laravel
+```http
+POST /login HTTP/1.1
+Content-Type: application/json
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```json
+Body
+{
+    "email": "budi@gmail.com",
+    "password": "budiman"
+}
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```json
+Status 200
+Content-Type: application/json
+{
+  "error": false,
+  "message": "Proses login berhasil",
+  "data": {
+    "id": 1,
+    "name": "budi",
+    "email": "budi@gmail.com",
+    "email_verified_at": null,
+    "created_at": "2020-12-07T11:52:25.000000Z",
+    "updated_at": "2020-12-07T11:52:25.000000Z",
+    "token": "eyJ0e......"
+  }
+}
+```
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+##### Post Disbursement
 
-### Premium Partners
+```http
+POST /disbursement HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {token}
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[OP.GG](https://op.gg)**
+```json
+Body
+{
+  "bank_code": "bni",
+  "account_number": "1234567890",
+  "amount": 10000,
+  "remark": "sample remark"
+}
+```
 
-## Contributing
+```json
+Status 200
+Content-Type: application/json
+{
+  "error": false,
+  "message": "Detail",
+  "data": {
+    "id": 6416761029,
+    "amount": 10000,
+    "status": "PENDING",
+    "timestamp": "2020-12-12T22:43:55.000000Z",
+    "bank_code": "bni",
+    "account_number": "1234567890",
+    "beneficiary_name": "PT FLIP",
+    "remark": "sample remark",
+    "time_served": null,
+    "fee": 4000,
+    "user_id": 1,
+    "updated_at": "2020-12-12T15:44:00.000000Z",
+    "created_at": "2020-12-12T15:44:00.000000Z"
+  }
+}
+```
+##### List Disbursement
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```http
+GET /disbursement HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {token}
+```
 
-## Code of Conduct
+```json
+Status 200
+Content-Type: application/json
+{
+  "error": false,
+  "message": "List",
+  "data": {
+    "current_page": 1,
+    "data": [
+      {
+        "id": 6673194606,
+        "amount": 10000,
+        "status": "SUCCESS",
+        "bank_code": "bni",
+        "account_number": "1234567890",
+        "beneficiary_name": "PT FLIP",
+        "remark": "sample remark",
+        "receipt": "https:\/\/flip-receipt.oss-ap-southeast-5.aliyuncs.com\/debit_receipt\/126316_3d07f9fef9612c7275b3c36f7e1e5762.jpg",
+        "fee": 4000,
+        "timestamp": "2020-12-12 23:00:50",
+        "time_served": "2020-12-12 23:09:50",
+        "user_id": 1,
+        "created_at": "2020-12-07T14:58:09.000000Z",
+        "updated_at": "2020-12-12T16:10:55.000000Z"
+      },
+      {
+        "id": 6416761029,
+        "amount": 10000,
+        "status": "SUCCESS",
+        "bank_code": "bni",
+        "account_number": "1234567890",
+        "beneficiary_name": "PT FLIP",
+        "remark": "sample remark",
+        "receipt": "https:\/\/flip-receipt.oss-ap-southeast-5.aliyuncs.com\/debit_receipt\/126316_3d07f9fef9612c7275b3c36f7e1e5762.jpg",
+        "fee": 4000,
+        "timestamp": "2020-12-12 22:57:39",
+        "time_served": "2020-12-12 23:06:39",
+        "user_id": 1,
+        "created_at": "2020-12-12T15:44:00.000000Z",
+        "updated_at": "2020-12-12T16:07:45.000000Z"
+      }
+    ],
+    "first_page_url": "http:\/\/127.0.0.1:8000\/api\/disbursement?page=1",
+    "from": 1,
+    "last_page": 1,
+    "last_page_url": "http:\/\/127.0.0.1:8000\/api\/disbursement?page=1",
+    "links": [
+      {
+        "url": null,
+        "label": "&laquo; Previous",
+        "active": false
+      },
+      {
+        "url": "http:\/\/127.0.0.1:8000\/api\/disbursement?page=1",
+        "label": 1,
+        "active": true
+      },
+      {
+        "url": null,
+        "label": "Next &raquo;",
+        "active": false
+      }
+    ],
+    "next_page_url": null,
+    "path": "http:\/\/127.0.0.1:8000\/api\/disbursement",
+    "per_page": 10,
+    "prev_page_url": null,
+    "to": 2,
+    "total": 2
+  }
+}
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+##### Detail Disbursement & Synchronize Status
 
-## Security Vulnerabilities
+```http
+POST /disbursement/detail/{id} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {token}
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```json
+Query (if need to synchronize status from server) OR non / optional
+{
+  "synchronize": 1,
+}
+```
 
-## License
+```json
+Status 200
+Content-Type: application/json
+{
+  "error": false,
+  "message": "Detail",
+  "data": {
+    "id": 6673194606,
+    "amount": 10000,
+    "status": "SUCCESS",
+    "bank_code": "bni",
+    "account_number": "1234567890",
+    "beneficiary_name": "PT FLIP",
+    "remark": "sample remark",
+    "receipt": "https:\/\/flip-receipt.oss-ap-southeast-5.aliyuncs.com\/debit_receipt\/126316_3d07f9fef9612c7275b3c36f7e1e5762.jpg",
+    "fee": 4000,
+    "timestamp": "2020-12-13 05:26:05",
+    "time_served": "2020-12-13 05:35:05",
+    "user_id": 1,
+    "created_at": "2020-12-07T14:58:09.000000Z",
+    "updated_at": "2020-12-12T22:36:10.000000Z"
+  }
+}
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# disbursement
+#### run UI 
+UI with reactjs and just complete until login 
+
+    npm install
+    npm run dev / npm run watch
