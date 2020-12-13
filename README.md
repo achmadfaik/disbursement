@@ -16,7 +16,7 @@ Run & Test
 ##### Authentication
 
 ```http
-POST /login HTTP/1.1
+POST /api/login HTTP/1.1
 Content-Type: application/json
 ```
 
@@ -50,7 +50,7 @@ Content-Type: application/json
 ##### Post Disbursement
 
 ```http
-POST /disbursement HTTP/1.1
+POST /api/disbursement HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {token}
 ```
@@ -91,7 +91,7 @@ Content-Type: application/json
 ##### List Disbursement
 
 ```http
-GET /disbursement HTTP/1.1
+GET /api/disbursement HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {token}
 ```
@@ -172,7 +172,7 @@ Content-Type: application/json
 ##### Detail Disbursement & Synchronize Status
 
 ```http
-POST /disbursement/detail/{id} HTTP/1.1
+POST /api/disbursement/detail/{id} HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {token}
 ```
